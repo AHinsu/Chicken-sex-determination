@@ -1,3 +1,5 @@
+#!/usr/bin/env Rscript --vanilla
+
 set.seed(100)
 #Set working directory
 setwd("C:/Users/ahinsu/Downloads/skim-data-pilot")
