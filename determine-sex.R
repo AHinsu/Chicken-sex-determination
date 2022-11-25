@@ -22,7 +22,9 @@ new.df1 <- new.df[new.df$`Scaffold name` %in% c("chrW", "chrZ"),2:82] %>% t()
 colnames(new.df1) <- c("chrW", "chrZ")
 new.df1 <- as.data.frame(new.df1)
 new.df1$proporiton <- new.df1$chrW/new.df1$chrZ
-threshold <- new.df1["Scaffold-length","proporiton"]
+threshold <- new.df1["Scaffold-length","proporiton"] #This should be something around 0.082
 new.df1 <- new.df1[-1,]
 new.df1$sex <- ifelse(new.df1$proporiton < threshold, "Male", ifelse(new.df1$proporiton > threshold, "Female", "Same"))
-write.table(x = new.df1, file = "Estimated-sex.txt", quote = FALSE, sep = "\t", row.names = TRUE, col.names = TRUE)
+new.df1$Sample <- rownames(new.df1)
+new.df1 %>% select(Sample, chrW, chrz, proportion, sex)
+write.table(x = new.df1, file = "Estimated-sex.txt", quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
