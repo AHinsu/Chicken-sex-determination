@@ -18,7 +18,7 @@ new.df <- merge(x = temp, y = my.df1, by = "V1")
 colnames(new.df)[1:2] <- c("Scaffold-name", "Scaffold-length")
 write.table(x = new.df, file = "per-scaffold-read-mappings.txt", quote = FALSE, row.names = FALSE, col.names = TRUE, sep = "\t")
 
-new.df1 <- new.df[new.df$`Scaffold name` %in% c("chrW", "chrZ"),2:82] %>% t()
+new.df1 <- new.df[new.df$`Scaffold name` %in% c("chrW", "chrZ"),2:ncol(new.df)] %>% t()
 colnames(new.df1) <- c("chrW", "chrZ")
 new.df1 <- as.data.frame(new.df1)
 new.df1$proporiton <- new.df1$chrW/new.df1$chrZ
