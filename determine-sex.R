@@ -88,8 +88,9 @@ new.df1 <- new.df1[-1, ]
 
 new.df1$sex <- ifelse(new.df1$proportion > threshold*2, "Male",
                       ifelse(new.df1$proportion < threshold*2, "Female", "Unsure"))
+final.df <- new.df1 %>% rownames_to_column(var="Sample")
 
-write.table(x = new.df1, file = "Estimated-sex.txt",
-            quote = FALSE, sep = "\t", row.names = TRUE, col.names = TRUE)
+write.table(x = final.df, file = "Estimated-sex.txt",
+            quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
 
 cat("End of script", "\n")
