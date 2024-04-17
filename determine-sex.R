@@ -1,4 +1,4 @@
-#!/usr/bin/env -S Rscript --vanilla
+#!/usr/bin/env Rscript
 
 # Description: Assign sex from mapping ratio against W and Z chromosomes
 #
@@ -74,16 +74,20 @@ colnames(new.df1) <- c("chrW", "chrZ")
 
 new.df1 <- as.data.frame(new.df1)
 
-new.df1$proportion <- new.df1$chrW/new.df1$chrZ
+#Taking the reverse of the ratio for better separation of proportion
+new.df1$proportion <- new.df1$chrZ/new.df1$chrW
 
+#The threshold will be the first entry which has proportion from the chromsome lengths. 
 threshold <- new.df1["Scaffold-length", "proportion"]
 
 new.df1 <- new.df1[-1, ]
 
-# Based on comparison with threshold, decide for each sample if it is male of
-# female and output to file
-new.df1$sex <- ifelse(new.df1$proportion < threshold, "Male",
-                      ifelse(new.df1$proportion > threshold, "Female", "Same"))
+# Based on comparison with threshold, decide for each sample if it is male of female and output to file.
+# While the threshold is roughly 12.11339206 as per the galGal6a genome lengths, there is always a clear separation between sexes: Observed that males have ratio higher than 70 (more than 5x the threshold) on an average. Also, some samples will have really close ratios in the range of 12-20, which I think should be Females but can be wrongly classified as Male.
+#Therefore, the threshold is manually modified to include relaxed upper limit. I decided to relax upto 20, meaning an additional 100% over the threshold. It is still less than average males having 500% times more than threshold.
+
+new.df1$sex <- ifelse(new.df1$proportion > threshold*2, "Male",
+                      ifelse(new.df1$proportion < threshold*2, "Female", "Unsure"))
 
 write.table(x = new.df1, file = "Estimated-sex.txt",
             quote = FALSE, sep = "\t", row.names = TRUE, col.names = TRUE)
